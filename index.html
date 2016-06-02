@@ -9,11 +9,11 @@
         <script src="three.min.js"></script>
         <style>
           html, body { margin: 0; }
-          img {  position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; z-index: -1;  }
+          img, canvas {  position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; z-index: -1;  }
         </style>
     </head>
     <body>
-      <img src="bg.jpg" alt="">
+      <img src="bg.jpg" alt="" id="bg-img">
         <script type="x-shader/x-vertex" id="vertexshader">
           attribute float size;
           attribute vec4 ca;
@@ -26,10 +26,34 @@
           }
         </script>
         <script type="x-shader/x-fragment" id="fragmentshader">
-          uniform vec3 color;
           varying vec4 vColor;
           void main() {
             gl_FragColor = vColor;
+          }
+        </script>
+        <script type="x-shader/x-vertex" id="orbvertexshader">                      
+          varying vec2 v_texcoord;
+          varying vec2 v_screencoord;
+           
+          void main() {
+            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+            gl_Position = projectionMatrix * mvPosition;
+           
+            v_texcoord = uv;
+            v_screencoord = (((gl_Position.xy / gl_Position.w) + 1.0) / 2.0);
+          }
+        </script>
+        <script type="x-shader/x-fragment" id="orbfragmentshader">
+          uniform sampler2D texture;
+          uniform sampler2D bg_texture;
+          uniform vec3 color;
+
+          varying vec2 v_texcoord;
+          varying vec2 v_screencoord;
+
+          void main() {
+            vec2 offset = texture2D(texture, v_texcoord).rg * 0.02;
+            gl_FragColor = texture2D(bg_texture, v_screencoord + offset);
           }
         </script>
         <script src="main.js"></script>
