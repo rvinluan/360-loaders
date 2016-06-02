@@ -68,7 +68,7 @@ function animate() {
     mesh.rotation.y += 0.001;
     mesh.rotation.z += 0.001;
     if(glowTexture.offset.y >= -0.55) {
-        glowTexture.offset.y -= 0.01;
+        glowTexture.offset.y -= 0.015;
     }
     controls.update();
     renderer.render( scene, camera );
